@@ -7,7 +7,8 @@
     "userInterfaceStyle": "dark",
     "scheme": "afterdark",
     "android": {
-      "package": "app.afterdark.mobile"
+      "package": "app.afterdark.mobile",
+      "versionCode": 2
     },
     "plugins": [
       "expo-secure-store",
@@ -26,7 +27,8 @@
         {
           "recordAudioAndroid": false
         }
-      ]
+      ],
+      "./plugins/withAfterDarkVideo"
     ],
     "icon": "./assets/icon.png"
   }
