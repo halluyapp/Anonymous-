@@ -1,0 +1,6 @@
+.git
+design
+dist-mobile
+node_modules
+.env
+.env.*

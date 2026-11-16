@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "After Dark",
+    "slug": "after-dark",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "scheme": "afterdark",
+    "android": {
+      "package": "app.afterdark.mobile"
+    },
+    "plugins": [
+      "expo-secure-store"
+    ],
+    "icon": "./assets/icon.png"
+  }
+}
