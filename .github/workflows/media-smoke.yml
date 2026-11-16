@@ -1,0 +1,20 @@
+name: Manual media smoke test
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_URL: ${{ vars.AFTER_DARK_SUPABASE_URL || 'https://bkhldfjqxarnqmcidwog.supabase.co' }}
+      SUPABASE_KEY: ${{ vars.AFTER_DARK_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_nSiFOIthyCgonT-zq4OJDg_PkUjYe0H' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Generate a short test voice note
+        run: ffmpeg -hide_banner -loglevel error -f lavfi -i 'sine=frequency=440:duration=1' -c:a libopus -y /tmp/after-dark-test.webm
+      - run: node tests/live-media.mjs

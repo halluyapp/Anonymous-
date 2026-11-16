@@ -73,3 +73,10 @@ Push notifications are **not implemented** yet. An Expo push token is generated 
 - The sandbox cannot directly connect to the hosted Supabase endpoint; real sign-up, Edge Function HTTP invocation, Android interactions, hosted deployment and full end-to-end delivery remain unverified.
 
 The current test web deployment is https://after-dark-one-xi.vercel.app. The Android build defaults to this address; set the `AFTER_DARK_WEB_URL` GitHub Actions variable to override it if the web domain changes. Email confirmation and custom SMTP must be configured before a public production launch.
+
+## Photo and voice messages (test release)
+The public link accepts one re-encoded photo (JPEG/PNG/WebP) or a browser-recorded voice note (up to 45 seconds) per message. Attachments are capped at 2 MiB, stored in a private bucket, and accessed through short-lived URLs by the recipient. Photos and voices can themselves identify the sender, even though the sender's account name is not shared. Do not upload sensitive material during testing.
+
+The web Share Studio can create a WebM video that includes the original voice audio, then save or share it when the browser supports file sharing. Rendering happens in real time; WebM is not accepted by every social app. On Android, voice playback is native, but voice-video creation currently opens the web studio and requires sign-in there; native MP4 export has not been implemented or device-tested. The card editor supports image attachments. Push notifications are not implemented.
+
+This is not production-ready media infrastructure: add automated orphan-object cleanup (including account deletion), enforce server-side transcoding/metadata removal and media validation, implement media retention/moderation for reports, verify trusted proxy IP handling, and test the whole flow across real devices and browsers before launch. Image re-encoding is done by the provided web client, not a server-side guarantee. Email verification is intentionally not required for the test build; auto-confirmed addresses can be impersonated, and password recovery cannot be trusted without verified ownership and configured mail delivery.

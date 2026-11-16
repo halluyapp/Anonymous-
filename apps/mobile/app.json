@@ -20,6 +20,12 @@
             "photo"
           ]
         }
+      ],
+      [
+        "expo-audio",
+        {
+          "recordAudioAndroid": false
+        }
       ]
     ],
     "icon": "./assets/icon.png"
