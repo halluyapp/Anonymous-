@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { readFile } from 'node:fs/promises';
 import { randomUUID, randomBytes } from 'node:crypto';
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 const url=process.env.SUPABASE_URL,key=process.env.SUPABASE_KEY;
 if(!url||!key)throw new Error('Missing Supabase public configuration');
 const client=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
@@ -30,7 +30,7 @@ try{
    await page.getByRole('button',{name:'CREATE VOICE VIDEO'}).click({timeout:30000});
    await page.getByRole('button',{name:'SAVE VIDEO'}).waitFor({timeout:60000});
    const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'SAVE VIDEO'}).click();const download=await downloadPromise;await download.saveAs('/tmp/after-dark-render.webm');
-   const info=JSON.parse(execFileSync('ffprobe',['-v','error','-show_streams','-of','json','/tmp/after-dark-render.webm'],{encoding:'utf8'}));assert.ok(info.streams.some(s=>s.codec_type==='audio'),'export has no audio');assert.ok(info.streams.some(s=>s.codec_type==='video'),'export has no video');console.log('Browser voice export has playable audio and video streams.');
+   const info=JSON.parse(execFileSync('ffprobe',['-v','error','-show_streams','-of','json','/tmp/after-dark-render.webm'],{encoding:'utf8'}));assert.ok(info.streams.some(s=>s.codec_type==='audio'),'export has no audio');assert.ok(info.streams.some(s=>s.codec_type==='video'),'export has no video');const volume=spawnSync('ffmpeg',['-hide_banner','-i','/tmp/after-dark-render.webm','-vn','-af','volumedetect','-f','null','-'],{encoding:'utf8'});assert.equal(volume.status,0);const mean=volume.stderr.match(/mean_volume:\s*(-?[0-9.]+) dB/);assert.ok(mean&&Number(mean[1])>-60,'export audio is silent');console.log('Browser voice export has a video stream and audible audio.');
   }finally{await browser.close()}
  }
 
