@@ -1,5 +1,10 @@
 name: Manual media smoke test
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tests/live-media.mjs'
+      - '.github/workflows/media-smoke.yml'
 permissions:
   contents: read
 jobs:
