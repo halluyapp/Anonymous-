@@ -16,7 +16,7 @@ jobs:
     env:
       EXPO_PUBLIC_SUPABASE_URL: ${{ vars.AFTER_DARK_SUPABASE_URL || 'https://bkhldfjqxarnqmcidwog.supabase.co' }}
       EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.AFTER_DARK_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_nSiFOIthyCgonT-zq4OJDg_PkUjYe0H' }}
-      EXPO_PUBLIC_WEB_URL: ${{ vars.AFTER_DARK_WEB_URL }}
+      EXPO_PUBLIC_WEB_URL: ${{ vars.AFTER_DARK_WEB_URL || 'https://after-dark-one-xi.vercel.app' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

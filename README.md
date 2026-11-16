@@ -71,3 +71,5 @@ Push notifications are **not implemented** yet. An Expo push token is generated 
 - HTTP smoke checks returned 200 for the four local web routes.
 - Supabase SQL tests verified RLS enabled, anonymous privilege restrictions, a transactional delivery/retry without duplicates, cross-account read isolation the sender and recipient message throttles, report insertion with a server-side text snapshot and denial of cross-account reporting. Test data was rolled back.
 - The sandbox cannot directly connect to the hosted Supabase endpoint; real sign-up, Edge Function HTTP invocation, Android interactions, hosted deployment and full end-to-end delivery remain unverified.
+
+The current test web deployment is https://after-dark-one-xi.vercel.app. The Android build defaults to this address; set the `AFTER_DARK_WEB_URL` GitHub Actions variable to override it if the web domain changes. Email confirmation and custom SMTP must be configured before a public production launch.
