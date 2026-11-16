@@ -38,7 +38,22 @@ jobs:
         run: npx expo prebuild --platform android --no-install
         working-directory: apps/mobile
       - name: Assemble standalone test-signed APK
-        run: ./gradlew assembleRelease
+        run: |
+          set +e
+          ./gradlew assembleRelease > "$RUNNER_TEMP/android-build.log" 2>&1
+          result=$?
+          cat "$RUNNER_TEMP/android-build.log"
+          if [ "$result" -ne 0 ]; then
+            echo '::group::Android build failure diagnostics'
+            grep -E '(^e: |^\* What went wrong:|^> |error:|FAILED|Could not|Exception)' "$RUNNER_TEMP/android-build.log" | tail -n 30 || true
+            echo '::endgroup::'
+            # Annotations remain accessible through the GitHub API if logs are unavailable.
+            tail -n 60 "$RUNNER_TEMP/android-build.log" | while IFS= read -r line; do
+              line="${line//'%'/'%25'}"; line="${line//$'\r'/'%0D'}"; line="${line//$'\n'/'%0A'}"
+              echo "::error::$line"
+            done
+          fi
+          exit "$result"
         working-directory: apps/mobile/android
       - uses: actions/upload-artifact@v4
         with:
