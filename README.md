@@ -4,7 +4,7 @@ An Android-first anonymous messaging product and a responsive Next.js web experi
 
 ## Current status
 
-This repository contains an **early, text-only vertical slice**, not the finished product. It has a real Supabase-backed account flow, profile creation, private inbox, public text composition, message management, text replies, reporting, profile editing, web password-reset screens, and web-generated share cards. Web and mobile use the same backend. There are no mock messages or fake authentication.
+This repository contains an **early, text-only vertical slice**, not the finished product. It has a real Supabase-backed account flow, profile creation, private inbox, public text composition, message management, text replies, reporting, profile editing, web password-reset screens, and web-generated share cards. Web and mobile use the same backend. Inbox inserts subscribe to Supabase Realtime with a manual-refresh fallback. There are no mock messages or fake authentication.
 
 The new Supabase project is `bkhldfjqxarnqmcidwog` (`eu-west-2`). Migrations and the `submit-message` Edge Function have been deployed to that project. Email signup is configured without mandatory confirmation. This makes it easier to register with an address the user does not control; account recovery, deliverability, and signup-abuse protection must be addressed before release. The older Flix project remains paused and the unrelated project was not modified.
 
@@ -27,7 +27,7 @@ The Supabase URL and **publishable** client key in `.env.example` are public app
 
 ## Supabase
 
-The migrations in `supabase/migrations` match the deployed migration versions. `profiles` and `messages` have owner-scoped row-level security. Anonymous clients cannot directly read or insert messages. A narrow public profile lookup exposes only public fields; the Edge Function validates submissions and calls a service-role-only delivery function. The function uses an HMAC of the forwarded IP for a simple per-recipient throttle; raw IP addresses are not stored in the database. Old throttle records are deleted on successful submissions, **not by a scheduled job**, so a retention job is still required. Do not rely on this implementation as sufficient production anti-abuse protection.
+The migrations in `supabase/migrations` match the deployed migration versions. `profiles` and `messages` have owner-scoped row-level security. Anonymous clients cannot directly read or insert messages. A narrow public profile lookup exposes only public fields; the Edge Function validates submissions and calls a service-role-only delivery function. The function uses an HMAC of the forwarded IP for a per-sender/per-recipient throttle and a per-recipient ceiling; raw IP addresses are not stored in the database. Expired throttle records are deleted during submissions, **not by a scheduled job**, so a retention job is still required. Do not rely on this implementation as sufficient production anti-abuse protection.
 
 The Edge Function requires the server-only `SUBMISSION_HASH_SECRET`, provisioned in Supabase. It is not stored here. To deploy a new instance, provision that secret with a secure random value through Supabase and deploy the function. Migrations should be applied with the Supabase CLI, with the project linked explicitly to the intended project. Never reset or modify unrelated projects.
 
