@@ -23,7 +23,7 @@ try{
  }
  console.log('Image and voice delivered, retries deduplicated, private attachments fetched.');
  if(process.env.RUN_BROWSER_TEST==='true'){
-  const {chromium}=await import('playwright');const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+  const {chromium}=await import('playwright-core');const serverless=(await import('@sparticuz/chromium')).default;const browser=await chromium.launch({headless:true,args:serverless.args,executablePath:await serverless.executablePath()});
   try{const page=await browser.newPage({viewport:{width:390,height:844}});const {data:{session}}=await client.auth.getSession();await page.addInitScript(({session})=>localStorage.setItem('sb-bkhldfjqxarnqmcidwog-auth-token',JSON.stringify(session)),{session});
    await page.goto('https://after-dark-one-xi.vercel.app/inbox?studio=1',{waitUntil:'networkidle',timeout:60000});
    await page.locator('.message-row').filter({hasText:'Voice message'}).first().click({timeout:30000});

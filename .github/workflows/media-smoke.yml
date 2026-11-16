@@ -24,8 +24,10 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - name: Generate a short test voice note
         run: ffmpeg -hide_banner -loglevel error -f lavfi -i 'sine=frequency=440:duration=1' -c:a libopus -y /tmp/after-dark-test.webm
+      - name: Install browser runtime libraries
+        run: sudo apt-get install -y -qq libnss3 libnspr4
       - name: Install browser test tools
-        run: npm install --no-save --no-package-lock playwright@1.55.0 && npx playwright install --with-deps chromium
+        run: npm install --no-save --no-package-lock playwright-core@1.55.0 @sparticuz/chromium@140.0.0
       - run: node tests/live-media.mjs
         env:
           RUN_BROWSER_TEST: 'true'
