@@ -21,10 +21,10 @@ export default function AppUpdates(){
  const [checking,setChecking]=useState(false);
  async function check(){
   if(checking)return;setChecking(true);let ota='';let native='';let release:null|{code:number;releaseUrl:string}=null;
-  try{if(!Updates.isEnabled){ota='Automatic design and JavaScript updates are not configured for this build.'}else{const result=await Updates.checkForUpdateAsync();if(result.isAvailable){const fetched=await Updates.fetchUpdateAsync();if(fetched.isNew){Alert.alert('Update ready','A compatible update has downloaded. Restart After Dark to apply it.',[{text:'Later',style:'cancel'},{text:'Restart now',onPress:()=>{void Updates.reloadAsync().catch(()=>Alert.alert('Could not restart','Close and reopen the app.'))}}]);return}ota='No new design update was downloaded.'}else ota='No compatible design update is available.'}}
+  try{if(!Updates.isEnabled){ota='Automatic design and JavaScript updates are not configured for this build.'}else{const result=await Updates.checkForUpdateAsync();if(result.isAvailable){const fetched=await Updates.fetchUpdateAsync();if(fetched.isNew){setChecking(false);Alert.alert('Update ready','A compatible update has downloaded. Restart After Dark to apply it.',[{text:'Later',style:'cancel'},{text:'Restart now',onPress:()=>{void Updates.reloadAsync().catch(()=>Alert.alert('Could not restart','Close and reopen the app.'))}}]);return}ota='No new design update was downloaded.'}else ota='No compatible design update is available.'}}
   catch{ota='Could not check design updates. Please check your connection.'}
-  finally{setChecking(false)}
   try{release=await nativeRelease();native=release?`Android build ${release.code} is available.`:'No newer published Android release was found.'}catch{native='Could not check Android releases. Please check your connection.'}
+  setChecking(false);
   if(release){Alert.alert('Update check',`${ota}\n\n${native}`, [{text:'Close',style:'cancel'},{text:'Open download',onPress:()=>offerNative(release!)}])}else Alert.alert('Update check',`${ota}\n\n${native}`)
  }
  return <View style={styles.box}><View style={styles.icon}><Ionicons name="cloud-download-outline" size={22} color="#ee76ba"/></View><View style={styles.copy}><Text style={styles.title}>App updates</Text><Text style={styles.description}>Check for design updates and new Android builds.</Text></View><TouchableOpacity disabled={checking} onPress={check} accessibilityRole="button"><Text style={styles.action}>{checking?'CHECKING…':'CHECK ↗'}</Text></TouchableOpacity></View>

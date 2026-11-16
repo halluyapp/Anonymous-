@@ -8,7 +8,7 @@
     "scheme": "afterdark",
     "android": {
       "package": "app.afterdark.mobile",
-      "versionCode": 2
+      "versionCode": 3
     },
     "plugins": [
       "expo-secure-store",
@@ -25,10 +25,18 @@
       [
         "expo-audio",
         {
-          "recordAudioAndroid": false
+          "recordAudioAndroid": true,
+          "microphonePermission": "Allow After Dark to record an anonymous voice message."
         }
       ],
-      "./plugins/withAfterDarkVideo"
+      "./plugins/withAfterDarkVideo",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": false,
+          "photosPermission": "Allow After Dark to choose a photo to send."
+        }
+      ]
     ],
     "icon": "./assets/icon.png"
   }
