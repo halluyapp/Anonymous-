@@ -1,5 +1,10 @@
 name: Manual media smoke test
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tests/live-media.mjs'
+      - '.github/workflows/media-smoke.yml'
 permissions:
   contents: read
 jobs:
@@ -19,4 +24,8 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - name: Generate a short test voice note
         run: ffmpeg -hide_banner -loglevel error -f lavfi -i 'sine=frequency=440:duration=1' -c:a libopus -y /tmp/after-dark-test.webm
+      - name: Install browser test tools
+        run: npm install --no-save --no-package-lock playwright@1.55.0 && npx playwright install --with-deps chromium
       - run: node tests/live-media.mjs
+        env:
+          RUN_BROWSER_TEST: 'true'
