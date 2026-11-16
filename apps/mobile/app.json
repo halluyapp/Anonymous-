@@ -10,7 +10,17 @@
       "package": "app.afterdark.mobile"
     },
     "plugins": [
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow After Dark to access photos you select.",
+          "savePhotosPermission": "Allow After Dark to save your share cards.",
+          "granularPermissions": [
+            "photo"
+          ]
+        }
+      ]
     ],
     "icon": "./assets/icon.png"
   }
